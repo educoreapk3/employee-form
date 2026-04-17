@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ShapeImg from "../../assets/shape.png";
 
 const FileUpload = ({
@@ -6,11 +6,24 @@ const FileUpload = ({
   name,
   setValue,
   error,
+  watch,
   accept = "image/*,.pdf",
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState("");
   const [preview, setPreview] = useState(null);
+
+  const fileValue = watch ? watch(name) : null;
+
+  useEffect(() => {
+    if (!fileValue) {
+      setFileName("");
+      setPreview(null);
+    } else if (typeof fileValue === "string") {
+      // setPreview(fileValue);
+      // setFileName(fileValue.split("/").pop());
+    }
+  }, [fileValue]);
 
   // DRAG EVENTS
   const handleDragOver = (e) => {
@@ -53,6 +66,14 @@ const FileUpload = ({
     }
   };
 
+  const handleClear = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setValue(name, null, { shouldValidate: true });
+    setFileName("");
+    setPreview(null);
+  };
+
   return (
     <div className="flex flex-col gap-1">
       <label className="text-base text-black">
@@ -65,13 +86,23 @@ const FileUpload = ({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={`
-          border border-dashed rounded-md p-4
+          relative border border-dashed rounded-md p-4
           flex flex-col items-center justify-center
           text-center cursor-pointer transition
           bg-[#FAFAFA]
           ${isDragging ? "border-green-500 bg-green-50" : "border-gray-400"}
         `}
       >
+        {fileName && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors z-10"
+            title="Clear file"
+          >
+            &times;
+          </button>
+        )}
         <img src={ShapeImg} alt="upload" className="w-12 h-12 mb-3" />
 
         {preview ? (

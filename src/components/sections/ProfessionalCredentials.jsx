@@ -7,7 +7,7 @@ import TrashImg from "../../assets/trash.png";
 
 const UploadItem = ({ item, showDate = true, onDelete, countries }) => {
   const file = item.file;
-  const isPdf = file?.type === "application/pdf";
+  const isPdf = file?.type === "application/pdf" || (item.attachment && item.attachment.includes('.pdf'));
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white rounded-lg p-4 border">
@@ -77,7 +77,7 @@ const ProfessionalCredentials = ({ form, countries }) => {
     addDegree({ ...temp, hrapp_ed_id: 0 });
     setValue("tempDegree.type", "");
     setValue("tempDegree.date", "");
-    setValue("tempDegree.file", null);
+    setValue("tempDegree.file", null, { shouldValidate: true });
   };
 
   const addDBSHandler = () => {
@@ -91,7 +91,7 @@ const ProfessionalCredentials = ({ form, countries }) => {
 
     addDBS({ ...temp, hrapp_dbs_id: 0 });
     setValue("tempDBS.country", "");
-    setValue("tempDBS.file", null);
+    setValue("tempDBS.file", null, { shouldValidate: true });
   };
 
   return (
@@ -136,6 +136,7 @@ const ProfessionalCredentials = ({ form, countries }) => {
           name="tempDegree.file"
           register={register}
           setValue={setValue}
+          watch={watch}
         />
 
         <button
@@ -177,6 +178,7 @@ const ProfessionalCredentials = ({ form, countries }) => {
           name="tempDBS.file"
           register={register}
           setValue={setValue}
+          watch={watch}
         />
 
         <button

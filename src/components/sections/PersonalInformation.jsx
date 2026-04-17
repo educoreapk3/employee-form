@@ -18,7 +18,7 @@ const GenderOption = [
 
 
 const PersonalInformation = ({ form, errors }) => {
-  const { register } = form;
+  const { register, setValue, watch } = form;
 
   return (
     <div className="space-y-6">
@@ -63,7 +63,8 @@ const PersonalInformation = ({ form, errors }) => {
           <FileUpload
             label="Passport size photo"
             name="hrapp_picture"
-            setValue={form.setValue}
+            setValue={setValue}
+            watch={watch}
             error={errors.hrapp_picture}
           />
         </div>

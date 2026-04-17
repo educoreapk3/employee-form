@@ -14,7 +14,6 @@ import ProfessionalCredentials from "../components/sections/ProfessionalCredenti
 import {
   formSchema
 } from "../utils/validationSchema";
-import { postRequest } from "../api/apiService";
 import { getCountries, getLanguages } from "../api/masterData";
 import { toast } from 'react-toastify';
 import api from "../api/client";
@@ -36,14 +35,14 @@ const EmployeeApplicationForm = () => {
     formState: { errors, touchedFields },
   } = form;
 
-  // Just to see form data. Remove later!
+  // !! Just to check form data. Remove later!
   const watchedValues = watch();
   useEffect(() => {
-    console.log("Form data:", watchedValues);
+    console.log("Form data when loading:", watchedValues);
   }, [JSON.stringify(watchedValues)]);
 
   const onSubmit = async (data) => {
-    console.log("Form data:", data);
+    console.log("Form data when submitting:", data);
     try {
       const formData = new FormData();
       const formatDate = (date) => {
@@ -197,6 +196,9 @@ const EmployeeApplicationForm = () => {
       setValue('hrapp_statute_teaching_1', String(applicant.hrapp_statute_teaching));
       setValue('hrapp_statute_work_country_1', String(applicant.hrapp_statute_work_country));
       setValue('hrapp_statute_supervised_under_eighteen_1', String(applicant.hrapp_statute_supervised_under_eighteen));
+      setValue("hrapp_picture", import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicants/' + applicant.hrapp_picture);
+      setValue("hrapp_passport_attachment", import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicants/' + applicant.hrapp_passport_attachment);
+      setValue("hrapp_id_attachment", import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicants/' + applicant.hrapp_id_attachment);
       setValue('dbs', applicant_dbs.map(item => {
         return {
           country: item.hrapp_dbs_country,
@@ -212,7 +214,6 @@ const EmployeeApplicationForm = () => {
           attachment: import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicant_education/' + item.hrapp_ed_attachment
         }
       }));
-      setValue("hrapp_passport_attachment", "https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg");
     } else {
       toast.error(res.data.message);
     }
