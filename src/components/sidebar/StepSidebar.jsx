@@ -38,7 +38,7 @@ const StepSidebar = ({ formData, errors, touchedFields }) => {
 
   const progressHeight = (completedSteps / steps.length) * 100;
 
-  console.log(completedSteps, progressHeight)
+  // console.log(completedSteps, progressHeight)
 
   return (
     <div className="rounded-xl p-6 hidden lg:block">
@@ -53,7 +53,7 @@ const StepSidebar = ({ formData, errors, touchedFields }) => {
         <div className="space-y-8">
           {steps.map((step) => {
             const status = getStepStatus(step, formData, errors, touchedFields);
-            console.log(step.id, status)
+            // console.log(step.id, status)
 
             return (
               <div key={step.id} className="relative flex items-center justify-end gap-4">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import PageWrapper from "../components/layout/PageWrapper";
@@ -16,8 +16,12 @@ import {
 } from "../utils/validationSchema";
 import { postRequest } from "../api/apiService";
 import { getCountries, getLanguages } from "../api/masterData";
+import { toast } from 'react-toastify';
+import api from "../api/client";
 
 const EmployeeApplicationForm = () => {
+  const hasRun = useRef(false);
+
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(false);
   const form = useForm({
@@ -28,11 +32,18 @@ const EmployeeApplicationForm = () => {
   const {
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, touchedFields },
   } = form;
 
+  // Just to see form data. Remove later!
+  const watchedValues = watch();
+  useEffect(() => {
+    console.log("Form data:", watchedValues);
+  }, [JSON.stringify(watchedValues)]);
 
   const onSubmit = async (data) => {
+    console.log("Form data:", data);
     try {
       const formData = new FormData();
       const formatDate = (date) => {
@@ -52,12 +63,10 @@ const EmployeeApplicationForm = () => {
         hrapp_passport_expiry: formatDate(data.hrapp_passport_expiry) || "",
         hrapp_id_number: data.hrapp_id_number,
         additionalIdType: data.additionalIdType,
-
         hrapp_email1: data.hrapp_email1,
         hrapp_email2: data.hrapp_email2,
         country_id: data.country_id,
         hrapp_country_note: data.hrapp_country_note,
-        // hrapp_language: data.language,
         hrapp_address: data.address,
         hrapp_joining_date: formatDate(data.joining_date),
         hrapp_local_experience: data.hrapp_local_experience,
@@ -73,7 +82,7 @@ const EmployeeApplicationForm = () => {
       // Object.entries(applicantPayload).forEach(([key, value]) => {
       //   formData.append(key, value ?? "");
       // });
-      formData.append("hrapp_id", 0);
+      formData.append("hrapp_id", data.hrapp_id || 0);
 
       // center id
       formData.append("center_id", import.meta.env.VITE_CENTER_ID);
@@ -105,7 +114,7 @@ const EmployeeApplicationForm = () => {
 
         return {
           uniqueId,
-          hrapp_ed_id: null,
+          hrapp_ed_id: item.hrapp_ed_id,
           hrapp_ed_degree: item.type,
           hrapp_ed_date: item.date,
           center_id: import.meta.env.VITE_CENTER_ID,
@@ -123,7 +132,7 @@ const EmployeeApplicationForm = () => {
 
         return {
           uniqueId,
-          hrapp_dbs_id: null,
+          hrapp_dbs_id: item.hrapp_dbs_id,
           hrapp_dbs_country: item.country,
           center_id: import.meta.env.VITE_CENTER_ID,
         };
@@ -131,33 +140,89 @@ const EmployeeApplicationForm = () => {
 
       formData.append("HrApplicantDbs", JSON.stringify(dbsPayload));
 
-      const res = await postRequest("save-hr-applicant", formData);
+      const res = await api.post('save', formData);
 
-      console.log("SUCCESS:", res);
-      alert("Submitted Successfully ✅");
+      if (res.data.type) {
+        console.log("SUCCESS:", res);
+        const uuid = res.data.hr_applicants?.hrapp_uuid;
+        if (uuid) {
+          const url = new URL(window.location.href);
+          url.searchParams.set("s", uuid);
+          window.history.replaceState(null, "", url.toString());
+        }
+        toast.success("Saved Successfully!");
+      } else {
+        toast.error(res.data.message);
+      }
+
 
     } catch (err) {
       console.log("ERROR:", err);
-      alert("Something went wrong ❌");
+      toast.error("Something went wrong!");
     }
   };
 
-  const saveDraft = (data) => {
-    localStorage.setItem("employeeFormDraft", JSON.stringify(data));
-    alert("Draft Saved ✅");
-  };
+  const getHrApplicant = async (hrapp_uuid) => {
+    const res = await api.get('get', {
+      params: {
+        center_id: import.meta.env.VITE_CENTER_ID,
+        hrapp_uuid,
+      }
+    });
 
-  useEffect(() => {
-    const draft = localStorage.getItem("employeeFormDraft");
-    if (draft) {
-      form.reset(JSON.parse(draft));
+    if (res.data.type) {
+      const applicant = res.data.hr_applicants;
+      const applicant_dbs = res.data.hr_applicant_dbs;
+      const applicant_education = res.data.hr_applicant_education;
+      const [firstName, ...rest] = (applicant.hrapp_name).split(' ');
+      setValue('hrapp_id', applicant.hrapp_id);
+      setValue('firstName', firstName);
+      setValue('lastName', rest.join(' '));
+      setValue('capabilities', applicant.capabilities);
+      setValue('hrapp_gender', applicant.hrapp_gender);
+      setValue('hrapp_marital_status', String(applicant.hrapp_marital_status));
+      setValue('hrapp_kids_num', applicant.hrapp_kids_num);
+      setValue('country_id', String(applicant.country_id));
+      setValue('hrapp_country_note', String(applicant.hrapp_country_note));
+      setValue('hrapp_passport_number', applicant.hrapp_passport_number);
+      setValue('hrapp_passport_expiry', applicant.hrapp_passport_expiry);
+      setValue('hrapp_id_number', applicant.hrapp_id_number);
+      setValue('hrapp_phone1', applicant.hrapp_phone1);
+      setValue('hrapp_phone2', applicant.hrapp_phone2);
+      setValue('hrapp_email1', applicant.hrapp_email1);
+      setValue('hrapp_email2', applicant.hrapp_email2);
+      setValue('joining_date', applicant.hrapp_joining_date);
+      setValue('hrapp_local_experience', applicant.hrapp_local_experience);
+      setValue('hrapp_broad_experience', applicant.hrapp_broad_experience);
+      setValue('hrapp_statute_teaching_1', String(applicant.hrapp_statute_teaching));
+      setValue('hrapp_statute_work_country_1', String(applicant.hrapp_statute_work_country));
+      setValue('hrapp_statute_supervised_under_eighteen_1', String(applicant.hrapp_statute_supervised_under_eighteen));
+      setValue('dbs', applicant_dbs.map(item => {
+        return {
+          country: item.hrapp_dbs_country,
+          hrapp_dbs_id: item.hrapp_dbs_id,
+          attachment: import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicant_dbs/' + item.hrapp_dbs_attachment
+        }
+      }));
+      setValue('degrees', applicant_education.map(item => {
+        return {
+          date: item.hrapp_ed_date,
+          type: item.hrapp_ed_degree,
+          hrapp_ed_id: item.hrapp_ed_id,
+          attachment: import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicant_education/' + item.hrapp_ed_attachment
+        }
+      }));
+      setValue("hrapp_passport_attachment", "https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg");
+    } else {
+      toast.error(res.data.message);
     }
-  }, []);
-
-
+  }
 
   useEffect(() => {
-    const fetchCountries = async () => {
+    if (hasRun.current) return;
+    hasRun.current = true;
+
+    const init = async () => {
       try {
         setLoading(true);
         const res = await getCountries();
@@ -173,12 +238,16 @@ const EmployeeApplicationForm = () => {
       } finally {
         setLoading(false);
       }
+
+      const params = new URLSearchParams(window.location.search);
+      const s = params.get("s");
+      if (s) {
+        getHrApplicant(s);
+      }
     };
 
-    fetchCountries();
+    init();
   }, []);
-
-  console.log(errors)
 
   return (
     <PageWrapper>
@@ -211,13 +280,13 @@ const EmployeeApplicationForm = () => {
               </div>
             </Card>
             <div className="bg-white rounded-br-2xl rounded-bl-2xl drop-shadow-lg flex p-4 justify-end gap-3">
-              <button
+              {/* <button
                 type="button"
                 onClick={handleSubmit(saveDraft)}
                 className="px-4 py-2 border rounded"
               >
                 Save
-              </button>
+              </button> */}
 
               <button
                 type="submit"

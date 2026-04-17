@@ -14,13 +14,13 @@ export const formSchema = yup.object({
     .nullable()
     .transform((value) => (value === "" ? null : value))
     .email("Invalid email format"),
-  dob: yup
-    .date()
-    .transform((value, originalValue) => {
-      return originalValue === "" ? null : value;
-    })
-    .typeError("Invalid date")
-    .required("Date of birth required"),
+  // dob: yup
+  //   .date()
+  //   .transform((value, originalValue) => {
+  //     return originalValue === "" ? null : value;
+  //   })
+  //   .typeError("Invalid date")
+  //   .required("Date of birth required"),
   hrapp_gender: yup.string().required("Gender required"),
   hrapp_marital_status: yup.string().required("Marital status is required"),
 
@@ -37,27 +37,27 @@ export const formSchema = yup.object({
     })
     .typeError("Invalid date")
     .required("Expiry date required"),
-  passportIssueDate: yup
-    .date()
-    .transform((value, originalValue) => {
-      return originalValue === "" ? null : value;
-    })
-    .typeError("Invalid date")
-    .required("Passport issue date required"),
-  passportPlaceOfIssue: yup.string().required(),
-  hrapp_passport_attachment: yup
-    .mixed()
-    .test("fileRequired", "Passport copy is required", (value) => {
-      if (!value) return false;
+  // passportIssueDate: yup
+  //   .date()
+  //   .transform((value, originalValue) => {
+  //     return originalValue === "" ? null : value;
+  //   })
+  //   .typeError("Invalid date")
+  //   .required("Passport issue date required"),
+  // passportPlaceOfIssue: yup.string().required(),
+  // hrapp_passport_attachment: yup
+  //   .mixed()
+  //   .test("fileRequired", "Passport copy is required", (value) => {
+  //     if (!value) return false;
 
-      if (value instanceof File) return true;
-      if (value.length > 0) return true;
-      return false;
-    })
-    .test("fileSize", "File too large (max 2MB)", (value) => {
-      if (!value) return true;
-      return value.size <= 2000000;
-    }),
+  //     if (value instanceof File) return true;
+  //     if (value.length > 0) return true;
+  //     return false;
+  //   })
+  //   .test("fileSize", "File too large (max 2MB)", (value) => {
+  //     if (!value) return true;
+  //     return value.size <= 2000000;
+  //   }),
   hrapp_id_attachment: yup
     .mixed()
     .test("fileSize", "File too large (max 2MB)", (value) => {

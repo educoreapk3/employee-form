@@ -27,13 +27,13 @@ const AdditionalIDInformation = ({ form, errors }) => {
 
         {/* Left Fields */}
         <div className="flex-1 flex flex-col gap-4">
-          <Select
+          {/* <Select
             label="Type of Additional ID"
             name="additionalIdType"
             register={register}
             error={errors.additionalIdType}
             options={AdditionalIdType}
-          />
+          /> */}
 
           <Input
             label="ID Number"

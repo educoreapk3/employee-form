@@ -49,58 +49,59 @@ const ContactInformation = ({ form, errors }) => {
         </div>
       </div>
 
-      {/* ================= ADDRESS ================= */}
-      <div className="space-y-6">
-        <h2 className="text-2xl sm:text-3xl font-normal text-[#0B121F]">
-          Current Residential Address
-        </h2>
+      {/* Disabled address section - to be implemented
+        <div className="space-y-6">
+          <h2 className="text-2xl sm:text-3xl font-normal text-[#0B121F]">
+            Current Residential Address
+          </h2>
 
-        <Textarea
-          label="Current Residential Address"
-          name="hrapp_address"
-          register={register}
-          error={errors.hrapp_address}
-        />
-
-        <Textarea
-          label="Additional Address Information (Apartment, Building etc.)"
-          name="addressAdditional"
-          register={register}
-          error={errors.addressAdditional}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            label="City / Town"
-            name="city"
+          <Textarea
+            label="Current Residential Address"
+            name="hrapp_address"
             register={register}
-            error={errors.city}
+            error={errors.hrapp_address}
           />
 
-          <Input
-            label="State / Province"
-            name="state"
+          <Textarea
+            label="Additional Address Information (Apartment, Building etc.)"
+            name="addressAdditional"
             register={register}
-            error={errors.state}
+            error={errors.addressAdditional}
           />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="City / Town"
+              name="city"
+              register={register}
+              error={errors.city}
+            />
+
+            <Input
+              label="State / Province"
+              name="state"
+              register={register}
+              error={errors.state}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Postal Code / ZIP"
+              name="postalCode"
+              register={register}
+              error={errors.postalCode}
+            />
+
+            <Input
+              label="Country"
+              name="country"
+              register={register}
+              error={errors.country}
+            />
+          </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            label="Postal Code / ZIP"
-            name="postalCode"
-            register={register}
-            error={errors.postalCode}
-          />
-
-          <Input
-            label="Country"
-            name="country"
-            register={register}
-            error={errors.country}
-          />
-        </div>
-      </div>
+      */}
     </div>
   );
 };

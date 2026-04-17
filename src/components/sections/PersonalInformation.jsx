@@ -5,15 +5,15 @@ import FileUpload from "../form/FileUpload";
 import Select from "../form/Select";
 
 const MartialStatusOptions = [
-  { label: "Single", value: "single" },
-  { label: "Married", value: "married" },
-  { label: "Divorced", value: "divorced" },
-  { label: "Widowed", value: "widowed" },
+  { label: "Single", value: "0" },
+  { label: "Married", value: "1" },
+  { label: "Divorced", value: "2" },
+  { label: "Widowed", value: "3" },
 ];
 
 const GenderOption = [
-  {label: "Male", value: "M"},
-  {label: "Female", value: "F"}
+  { label: "Male", value: "M" },
+  { label: "Female", value: "F" }
 ]
 
 
@@ -70,14 +70,14 @@ const PersonalInformation = ({ form, errors }) => {
       </div>
 
       {/* DOB + Gender */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Input
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* <Input
           type="date"
           label="Date of Birth"
           name="dob"
           register={register}
           error={errors.dob}
-        />
+        /> */}
 
         <RadioGroup
           label="Select your Gender"
@@ -86,10 +86,7 @@ const PersonalInformation = ({ form, errors }) => {
           error={errors.hrapp_gender}
           options={GenderOption}
         />
-      </div>
 
-      {/* Marital + Dependants */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Select
           label="Marital status"
           name="hrapp_marital_status"
@@ -107,6 +104,7 @@ const PersonalInformation = ({ form, errors }) => {
           placeholder="0"
         />
       </div>
+
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import Input from "../form/Input";
 import RadioGroup from "../form/RadioGroup";
 
-const RadioBoxOptions=[
-  {label: "Yes", value: "1"},
-  {label: "No", value: "0"}
+const RadioBoxOptions = [
+  { label: "Yes", value: "1" },
+  { label: "No", value: "0" }
 ]
 
 const ProfessionalExperience = ({ form, errors }) => {
@@ -15,17 +15,20 @@ const ProfessionalExperience = ({ form, errors }) => {
         Professional Experience
       </h2>
 
-      {/* Joining Date */}
-      <Input
-        type="date"
-        label="Expected Joining Date"
-        name="joining_date"
-        register={register}
-        error={errors.joining_date}
-      />
+
 
       {/* Experience */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        {/* Joining Date */}
+        <Input
+          type="date"
+          label="Expected Joining Date"
+          name="joining_date"
+          register={register}
+          error={errors.joining_date}
+        />
+
         <Input
           label="Total Years of Teaching Experience"
           name="hrapp_local_experience"

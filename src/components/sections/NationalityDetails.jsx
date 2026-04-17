@@ -5,7 +5,6 @@ import FileUpload from "../form/FileUpload";
 
 const NationalityDetails = ({ form, errors, countries }) => {
   const { register, setValue } = form;
-  
 
   return (
     <div className="space-y-6">
@@ -57,7 +56,7 @@ const NationalityDetails = ({ form, errors, countries }) => {
           </div>
 
           {/* Issue Date + Place */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               type="date"
               label="Passport Issuance Date"
@@ -72,7 +71,7 @@ const NationalityDetails = ({ form, errors, countries }) => {
               register={register}
               error={errors.passportPlaceOfIssue}
             />
-          </div>
+          </div> */}
         </div>
 
         {/* Right Upload */}

@@ -1,16 +1,16 @@
 import { useFieldArray } from "react-hook-form";
+import { toast } from "react-toastify";
 import Select from "../form/Select";
 import Input from "../form/Input";
 import FileUpload from "../form/FileUpload";
 import TrashImg from "../../assets/trash.png";
 
-const UploadItem = ({ key, item, showDate = true, onDelete }) => {
-  console.log(item)
+const UploadItem = ({ item, showDate = true, onDelete, countries }) => {
   const file = item.file;
   const isPdf = file?.type === "application/pdf";
 
   return (
-    <div key={key} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white rounded-lg p-4 border">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white rounded-lg p-4 border">
       <div className="flex items-center gap-4">
         {isPdf ? (
           <div className="w-12 h-12 flex items-center justify-center bg-gray-100 rounded text-xl">
@@ -18,7 +18,7 @@ const UploadItem = ({ key, item, showDate = true, onDelete }) => {
           </div>
         ) : (
           <img
-            src={URL.createObjectURL(file)}
+            src={item.attachment ? item.attachment : URL.createObjectURL(file)}
             alt="upload"
             className="w-12 h-12 object-cover rounded"
           />
@@ -26,7 +26,7 @@ const UploadItem = ({ key, item, showDate = true, onDelete }) => {
 
         <div>
           <p className="font-medium text-sm sm:text-base">
-            {item.type || item.country}
+            {item.type || countries?.find((c) => c.value == item.country)?.label || item.country}
           </p>
           {showDate && (
             <p className="text-xs sm:text-sm text-gray-500">
@@ -66,20 +66,30 @@ const ProfessionalCredentials = ({ form, countries }) => {
   const dbs = watch("dbs");
 
   const addDegreeHandler = () => {
+    if (degrees?.length >= 5) {
+      toast.error("Maximum 5 degrees allowed");
+      return;
+    }
+
     const temp = watch("tempDegree");
     if (!temp?.type || !temp?.date || !temp?.file) return;
 
-    addDegree(temp);
+    addDegree({ ...temp, hrapp_ed_id: 0 });
     setValue("tempDegree.type", "");
     setValue("tempDegree.date", "");
     setValue("tempDegree.file", null);
   };
 
   const addDBSHandler = () => {
+    if (dbs?.length >= 5) {
+      toast.error("Maximum 5 DBS records allowed");
+      return;
+    }
+
     const temp = watch("tempDBS");
     if (!temp?.country || !temp?.file) return;
 
-    addDBS(temp);
+    addDBS({ ...temp, hrapp_dbs_id: 0 });
     setValue("tempDBS.country", "");
     setValue("tempDBS.file", null);
   };
@@ -95,7 +105,7 @@ const ProfessionalCredentials = ({ form, countries }) => {
         <div className="space-y-3">
           {degrees.map((item, index) => (
             <UploadItem
-              key={item.file?.name + index}
+              key={item.id || `degree-${index}`}
               item={item}
               onDelete={() => removeDegree(index)}
             />
@@ -131,7 +141,7 @@ const ProfessionalCredentials = ({ form, countries }) => {
         <button
           type="button"
           onClick={addDegreeHandler}
-          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
+          className={`w-full sm:w-auto px-6 py-2 rounded-lg transition bg-blue-600 hover:bg-blue-700 text-white`}
         >
           Add Degree
         </button>
@@ -146,6 +156,7 @@ const ProfessionalCredentials = ({ form, countries }) => {
               item={item}
               showDate={false}
               onDelete={() => removeDBS(index)}
+              countries={countries}
             />
           ))}
         </div>
@@ -153,6 +164,7 @@ const ProfessionalCredentials = ({ form, countries }) => {
 
       {/* ===== Add DBS ===== */}
       <div className="bg-white border rounded-xl p-4 sm:p-6 space-y-4">
+
         <Select
           label="Country"
           name="tempDBS.country"
@@ -170,7 +182,7 @@ const ProfessionalCredentials = ({ form, countries }) => {
         <button
           type="button"
           onClick={addDBSHandler}
-          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
+          className={`w-full sm:w-auto px-6 py-2 rounded-lg transition bg-blue-600 hover:bg-blue-700 text-white`}
         >
           Add DBS
         </button>
