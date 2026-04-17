@@ -14,7 +14,7 @@ const AdditionalIdType = [{
 }]
 
 const AdditionalIDInformation = ({ form, errors }) => {
-  const { register } = form;
+  const { register, watch } = form;
 
   return (
     <div className="space-y-6">
@@ -50,6 +50,7 @@ const AdditionalIDInformation = ({ form, errors }) => {
             name="hrapp_id_attachment"
             setValue={form.setValue}
             error={errors.hrapp_id_attachment}
+            watch={watch}
           />
         </div>
       </div>

@@ -4,7 +4,7 @@ import Select from "../form/Select";
 import FileUpload from "../form/FileUpload";
 
 const NationalityDetails = ({ form, errors, countries }) => {
-  const { register, setValue } = form;
+  const { register, setValue, watch } = form;
 
   return (
     <div className="space-y-6">
@@ -82,6 +82,7 @@ const NationalityDetails = ({ form, errors, countries }) => {
             setValue={setValue}
             error={errors.hrapp_passport_attachment}
             accept="image/*,.pdf"
+            watch={watch}
           />
         </div>
       </div>

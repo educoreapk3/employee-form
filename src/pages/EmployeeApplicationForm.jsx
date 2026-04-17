@@ -11,9 +11,7 @@ import AdditionalIDInformation from "../components/sections/AdditionalIDInformat
 import ContactInformation from "../components/sections/ContactInformation";
 import ProfessionalExperience from "../components/sections/ProfessionalExperience";
 import ProfessionalCredentials from "../components/sections/ProfessionalCredentials";
-import {
-  formSchema
-} from "../utils/validationSchema";
+import { formSchema } from "../utils/validationSchema";
 import { getCountries, getLanguages } from "../api/masterData";
 import { toast } from 'react-toastify';
 import api from "../api/client";
@@ -87,21 +85,11 @@ const EmployeeApplicationForm = () => {
       formData.append("center_id", import.meta.env.VITE_CENTER_ID);
 
       // FILES
-      if (data.hrapp_picture) {
-        formData.append("hrapp_picture", data.hrapp_picture);
-      }
+      formData.append("hrapp_picture", data.hrapp_picture);
 
-      if (data.hrapp_passport_attachment) {
-        formData.append("hrapp_passport_attachment", data.hrapp_passport_attachment);
-      }
+      formData.append("hrapp_passport_attachment", data.hrapp_passport_attachment);
 
-      if (data.hrapp_id_attachment) {
-        formData.append("hrapp_id_attachment", data.hrapp_id_attachment);
-      }
-
-      if (data.hrapp_cv) {
-        formData.append("hrapp_cv", data.hrapp_cv);
-      }
+      formData.append("hrapp_id_attachment", data.hrapp_id_attachment);
 
       const educationPayload = data.degrees?.map((item) => {
         const uniqueId = crypto.randomUUID();
@@ -161,6 +149,12 @@ const EmployeeApplicationForm = () => {
     }
   };
 
+  const onError = (errors) => {
+    if (Object.keys(errors).length > 0) {
+      toast.error("Please fix the form errors.");
+    }
+  }
+
   const getHrApplicant = async (hrapp_uuid) => {
     const res = await api.get('get', {
       params: {
@@ -196,9 +190,19 @@ const EmployeeApplicationForm = () => {
       setValue('hrapp_statute_teaching_1', String(applicant.hrapp_statute_teaching));
       setValue('hrapp_statute_work_country_1', String(applicant.hrapp_statute_work_country));
       setValue('hrapp_statute_supervised_under_eighteen_1', String(applicant.hrapp_statute_supervised_under_eighteen));
-      setValue("hrapp_picture", import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicants/' + applicant.hrapp_picture);
-      setValue("hrapp_passport_attachment", import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicants/' + applicant.hrapp_passport_attachment);
-      setValue("hrapp_id_attachment", import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicants/' + applicant.hrapp_id_attachment);
+
+      if (applicant.hrapp_picture) {
+        setValue("hrapp_picture", import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicants/' + applicant.hrapp_picture);
+      }
+
+      if (applicant.hrapp_passport_attachment) {
+        setValue("hrapp_passport_attachment", import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicants/' + applicant.hrapp_passport_attachment);
+      }
+
+      if (applicant.hrapp_id_attachment) {
+        setValue("hrapp_id_attachment", import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicants/' + applicant.hrapp_id_attachment);
+      }
+
       setValue('dbs', applicant_dbs.map(item => {
         return {
           country: item.hrapp_dbs_country,
@@ -262,7 +266,7 @@ const EmployeeApplicationForm = () => {
             </div>
           )}
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit, onError)}
             className="flex flex-col flex-1 h-100"
           >
             <Card>

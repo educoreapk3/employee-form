@@ -60,8 +60,9 @@ export const formSchema = yup.object({
   //   }),
   hrapp_id_attachment: yup
     .mixed()
+    .nullable()
     .test("fileSize", "File too large (max 2MB)", (value) => {
-      if (!value) return true;
+      if (!value || typeof value === "string") return true;
       return value.size <= 2000000;
     }),
 

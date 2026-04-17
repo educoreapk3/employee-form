@@ -20,8 +20,8 @@ const FileUpload = ({
       setFileName("");
       setPreview(null);
     } else if (typeof fileValue === "string") {
-      // setPreview(fileValue);
-      // setFileName(fileValue.split("/").pop());
+      setPreview(fileValue);
+      setFileName(fileValue.split("/").pop());
     }
   }, [fileValue]);
 
@@ -106,11 +106,17 @@ const FileUpload = ({
         <img src={ShapeImg} alt="upload" className="w-12 h-12 mb-3" />
 
         {preview ? (
-          <img
-            src={preview}
-            alt="preview"
-            className="w-32 h-32 object-cover rounded-md mb-2"
-          />
+          <>
+            {fileName.includes(".pdf") ?
+              'PDF'
+              :
+              <img
+                src={preview}
+                alt="preview"
+                className="w-32 h-32 object-cover rounded-md mb-2"
+              />
+            }
+          </>
         ) : fileName ? (
           <p className="text-sm text-green-600 font-medium">
             {fileName}
