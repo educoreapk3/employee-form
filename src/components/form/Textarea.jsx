@@ -1,4 +1,4 @@
-const Textarea = ({ label, placeholder,  register, name }) => {
+const Textarea = ({ label, placeholder, register, name, error }) => {
   return (
     <div className="flex flex-col gap-1 mt-4">
       <label className="text-base font-normal text-black">{label}</label>
@@ -8,6 +8,7 @@ const Textarea = ({ label, placeholder,  register, name }) => {
         {...register(name)}
         className="border border-[#00000066] rounded-md p-3 text-base font-normal px-3 py-2 placeholder:text-gray-400"
       />
+      {error && <span className="text-xs text-red-500">{error.message}</span>}
     </div>
   );
 };

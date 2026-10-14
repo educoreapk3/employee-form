@@ -3,14 +3,11 @@ import Select from "../form/Select";
 import FileUpload from "../form/FileUpload";
 
 const AdditionalIdType = [{
-  label: "CNIC",
-  value: "cnic"
+  label: "National",
+  value: "national"
 }, {
-  label: "Driving License",
-  value: "driving_license"
-}, {
-  label: "Other",
-  value: "other"
+  label: "Residence",
+  value: "residence"
 }]
 
 const AdditionalIDInformation = ({ form, errors }) => {
@@ -27,13 +24,14 @@ const AdditionalIDInformation = ({ form, errors }) => {
 
         {/* Left Fields */}
         <div className="flex-1 flex flex-col gap-4">
-          {/* <Select
-            label="Type of Additional ID"
+          <Select
+            label="Type of ID (National / Residence)"
             name="additionalIdType"
             register={register}
             error={errors.additionalIdType}
             options={AdditionalIdType}
-          /> */}
+            placeholder="Select ID Type"
+          />
 
           <Input
             label="ID Number"
@@ -44,7 +42,7 @@ const AdditionalIDInformation = ({ form, errors }) => {
         </div>
 
         {/* Right Upload */}
-        <div className="w-full lg:w-80">
+        <div className="w-full lg:w-[234px] lg:shrink-0">
           <FileUpload
             label="Upload a scanned copy of your ID"
             name="hrapp_id_attachment"

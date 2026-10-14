@@ -5,6 +5,7 @@ const Input = ({
   error,
   type = "text",
   placeholder = "",
+  disabled = false,
 }) => {
   return (
     <div className="flex flex-col gap-1">
@@ -15,6 +16,7 @@ const Input = ({
 
       <input
         type={type}
+        disabled={disabled}
         min={type === "number" ? 0 : undefined}
         placeholder={placeholder}
         {...register(name, {

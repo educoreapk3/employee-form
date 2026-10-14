@@ -42,6 +42,7 @@ const NationalityDetails = ({ form, errors, countries }) => {
             <Input
               label="Passport Number"
               name="hrapp_passport_number"
+              placeholder="Enter the passport number"
               register={register}
               error={errors.hrapp_passport_number}
             />
@@ -56,7 +57,7 @@ const NationalityDetails = ({ form, errors, countries }) => {
           </div>
 
           {/* Issue Date + Place */}
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               type="date"
               label="Passport Issuance Date"
@@ -68,14 +69,15 @@ const NationalityDetails = ({ form, errors, countries }) => {
             <Input
               label="Place of Issue"
               name="passportPlaceOfIssue"
+              placeholder="City, Country"
               register={register}
               error={errors.passportPlaceOfIssue}
             />
-          </div> */}
+          </div>
         </div>
 
         {/* Right Upload */}
-        <div className="w-full lg:w-80">
+        <div className="w-full lg:w-[234px] lg:shrink-0">
           <FileUpload
             label="Upload a scanned copy of your passport"
             name="hrapp_passport_attachment"

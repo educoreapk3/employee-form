@@ -1,5 +1,4 @@
 import Input from "../form/Input";
-import Textarea from "../form/Textarea";
 
 const ContactInformation = ({ form, errors }) => {
   const { register } = form;
@@ -17,6 +16,7 @@ const ContactInformation = ({ form, errors }) => {
             type="tel"
             label="Phone Number"
             name="hrapp_phone1"
+            placeholder="Enter Phone number"
             register={register}
             error={errors.hrapp_phone1}
           />
@@ -25,6 +25,7 @@ const ContactInformation = ({ form, errors }) => {
             type="tel"
             label="Mobile Number"
             name="hrapp_phone2"
+            placeholder="Enter Mobile number"
             register={register}
             error={errors.hrapp_phone2}
           />
@@ -35,36 +36,39 @@ const ContactInformation = ({ form, errors }) => {
             type="email"
             label="Email Address"
             name="hrapp_email1"
+            placeholder="Enter email address"
             register={register}
             error={errors.hrapp_email1}
           />
 
           <Input
             type="email"
-            label="Alternate Email Address"
+            label="Alternative Email Address"
             name="hrapp_email2"
+            placeholder="Enter alternative email address"
             register={register}
             error={errors.hrapp_email2}
           />
         </div>
       </div>
 
-      {/* Disabled address section - to be implemented
         <div className="space-y-6">
-          <h2 className="text-2xl sm:text-3xl font-normal text-[#0B121F]">
+          <h3 className="text-xl font-normal text-[#0B121F]">
             Current Residential Address
-          </h2>
+          </h3>
 
-          <Textarea
+          <Input
             label="Current Residential Address"
             name="hrapp_address"
+            placeholder="Enter address line 1"
             register={register}
             error={errors.hrapp_address}
           />
 
-          <Textarea
-            label="Additional Address Information (Apartment, Building etc.)"
+          <Input
+            label="Additional Address Information (Apartment, Building, etc.)"
             name="addressAdditional"
+            placeholder="Enter address line 2"
             register={register}
             error={errors.addressAdditional}
           />
@@ -73,13 +77,15 @@ const ContactInformation = ({ form, errors }) => {
             <Input
               label="City / Town"
               name="city"
+              placeholder="Enter city / town"
               register={register}
               error={errors.city}
             />
 
             <Input
-              label="State / Province"
+              label="State / Province / Emirate"
               name="state"
+              placeholder="Enter state / province / emirate"
               register={register}
               error={errors.state}
             />
@@ -89,6 +95,7 @@ const ContactInformation = ({ form, errors }) => {
             <Input
               label="Postal Code / ZIP"
               name="postalCode"
+              placeholder="Enter postal code / ZIP"
               register={register}
               error={errors.postalCode}
             />
@@ -96,12 +103,12 @@ const ContactInformation = ({ form, errors }) => {
             <Input
               label="Country"
               name="country"
+              placeholder="Enter country"
               register={register}
               error={errors.country}
             />
           </div>
         </div>
-      */}
     </div>
   );
 };

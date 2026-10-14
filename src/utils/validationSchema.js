@@ -4,6 +4,22 @@ export const formSchema = yup.object({
   firstName: yup.string().required("First name is required"),
   lastName: yup.string().required("Last name is required"),
   capabilities: yup.string().min(10, "Minimum 10 characters"),
+  hrapp_address: yup.string().max(255, "Address must be 255 characters or fewer"),
+  preferredRole: yup.string().max(255, "Preferred role must be 255 characters or fewer"),
+  dob: yup
+    .date()
+    .nullable()
+    .transform((value, originalValue) => originalValue === "" ? null : value)
+    .typeError("Invalid date of birth")
+    .max(new Date(), "Date of birth cannot be in the future"),
+  passportIssueDate: yup
+    .date()
+    .nullable()
+    .transform((value, originalValue) => originalValue === "" ? null : value)
+    .typeError("Invalid passport issuance date")
+    .max(new Date(), "Passport issuance date cannot be in the future"),
+  passportPlaceOfIssue: yup.string(),
+  additionalIdType: yup.string().oneOf(["", "national", "residence"], "Select a valid ID type"),
   hrapp_email1: yup
     .string()
     .nullable()

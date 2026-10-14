@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .history
+
+# Local backend reference and migration files
+/backend/
+/migrations/

@@ -4,6 +4,7 @@ const RadioGroup = ({
   options = [],
   register,
   error,
+  showIndicator = false,
 }) => {
   return (
     <div className="flex flex-col gap-1">
@@ -21,7 +22,7 @@ const RadioGroup = ({
               type="radio"
               value={option.value}
               {...register(name)}
-              className="peer hidden"
+              className="peer sr-only"
             />
 
             <span
@@ -31,9 +32,11 @@ const RadioGroup = ({
                 border border-[#0000001F]
                 peer-checked:bg-[#E8458A]
                 peer-checked:text-white
+                peer-focus-visible:ring-2 peer-focus-visible:ring-pink-500
                 transition
               "
             >
+              {showIndicator && <span aria-hidden="true" className="inline-block w-4 h-4 rounded-full border border-current mr-2 align-middle" />}
               {option.label}
             </span>
           </label>

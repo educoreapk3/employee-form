@@ -12,7 +12,7 @@ import ContactInformation from "../components/sections/ContactInformation";
 import ProfessionalExperience from "../components/sections/ProfessionalExperience";
 import ProfessionalCredentials from "../components/sections/ProfessionalCredentials";
 import { formSchema } from "../utils/validationSchema";
-import { getCountries, getLanguages } from "../api/masterData";
+import { getCountries } from "../api/masterData";
 import { toast } from 'react-toastify';
 import api from "../api/client";
 
@@ -53,23 +53,34 @@ const EmployeeApplicationForm = () => {
         capabilities: data.capabilities || "",
         hrapp_gender: data.hrapp_gender || "",
         hrapp_marital_status: data.hrapp_marital_status || "",
-        hrapp_kids_num: data.hrapp_kids_num || "",
+        hrapp_kids_num: Number.isFinite(data.hrapp_kids_num) ? data.hrapp_kids_num : 0,
         hrapp_phone1: cleanPhone1 || "",
         hrapp_phone2: cleanPhone2 || "",
         hrapp_passport_number: data.hrapp_passport_number || "",
         hrapp_passport_expiry: formatDate(data.hrapp_passport_expiry) || "",
         hrapp_id_number: data.hrapp_id_number,
-        additionalIdType: data.additionalIdType,
         hrapp_email1: data.hrapp_email1,
         hrapp_email2: data.hrapp_email2,
         country_id: data.country_id,
         hrapp_country_note: data.hrapp_country_note,
-        hrapp_address: data.address,
+        hrapp_address: data.hrapp_address || "",
+        hrapp_position_apply: data.preferredRole || "",
+        hrapp_dob: formatDate(data.dob),
+        hrapp_passport_issue_date: formatDate(data.passportIssueDate),
+        hrapp_passport_place_of_issue: data.passportPlaceOfIssue || null,
+        hrapp_id_type: data.additionalIdType || null,
+        hrapp_address_additional: data.addressAdditional || null,
+        hrapp_city: data.city || null,
+        hrapp_state: data.state || null,
+        hrapp_postal_code: data.postalCode || null,
+        hrapp_address_country: data.country || null,
+        hrapp_role_description: data.roleDescription || null,
+        hrapp_skills: data.skills || [],
         hrapp_joining_date: formatDate(data.joining_date),
         hrapp_local_experience: data.hrapp_local_experience,
         hrapp_broad_experience: data.hrapp_broad_experience,
         hrapp_statute_teaching: data.hrapp_statute_teaching_1 ?? 0,
-        hrapp_statute_work_country: data.hrapp_statute_work_country_1 ?? 0,
+        hrapp_statute_work_country: Number(data.allowedToWorkUae ?? 0),
         hrapp_statute_supervised_under_eighteen:
           data.hrapp_statute_supervised_under_eighteen_1 ?? 0,
       };
@@ -104,10 +115,27 @@ const EmployeeApplicationForm = () => {
           hrapp_ed_id: item.hrapp_ed_id,
           hrapp_ed_degree: item.type,
           hrapp_ed_date: item.date,
+          hrapp_ed_university: item.university || null,
+          hrapp_ed_from: item.from || null,
+          hrapp_ed_to: item.to || item.date || null,
           center_id: import.meta.env.VITE_CENTER_ID,
         };
       });
       formData.append("HrApplicantEducation", JSON.stringify(educationPayload));
+      formData.append("HrApplicantExperience", JSON.stringify((data.experiences || []).map(item => ({
+        hrapp_exp_id: item.hrapp_exp_id || 0,
+        hrapp_exp_role: item.role,
+        hrapp_exp_institute: item.institute,
+        hrapp_exp_country: item.country,
+        hrapp_exp_from: item.from,
+        hrapp_exp_to: item.current ? null : item.to,
+        hrapp_exp_current: Boolean(item.current),
+        hrapp_exp_subject: item.subject || null,
+        hrapp_exp_grades: item.grades || null,
+        hrapp_exp_position: item.position || null,
+        hrapp_exp_job_type: item.jobType || null,
+        hrapp_exp_description: item.description || null,
+      }))));
 
       // DBS
       const dbsPayload = data.dbs?.map((item) => {
@@ -132,6 +160,11 @@ const EmployeeApplicationForm = () => {
       if (res.data.type) {
         console.log("SUCCESS:", res);
         const uuid = res.data.hr_applicants?.hrapp_uuid;
+        setValue('hrapp_id', res.data.hr_applicants.hrapp_id);
+        // Refresh generated child IDs without replacing files or unsubmitted editors.
+        (res.data.hr_applicant_education || []).forEach((item, index) => setValue(`degrees.${index}.hrapp_ed_id`, item.hrapp_ed_id));
+        (res.data.hr_applicant_dbs || []).forEach((item, index) => setValue(`dbs.${index}.hrapp_dbs_id`, item.hrapp_dbs_id));
+        (res.data.hr_applicant_experience || []).forEach((item, index) => setValue(`experiences.${index}.hrapp_exp_id`, item.hrapp_exp_id));
         if (uuid) {
           const url = new URL(window.location.href);
           url.searchParams.set("s", uuid);
@@ -184,11 +217,21 @@ const EmployeeApplicationForm = () => {
       setValue('hrapp_phone2', applicant.hrapp_phone2);
       setValue('hrapp_email1', applicant.hrapp_email1);
       setValue('hrapp_email2', applicant.hrapp_email2);
+      setValue('hrapp_address', applicant.hrapp_address || '');
+      setValue('preferredRole', applicant.hrapp_position_apply || '');
+      Object.entries({ dob: 'hrapp_dob', passportIssueDate: 'hrapp_passport_issue_date', passportPlaceOfIssue: 'hrapp_passport_place_of_issue', additionalIdType: 'hrapp_id_type', addressAdditional: 'hrapp_address_additional', city: 'hrapp_city', state: 'hrapp_state', postalCode: 'hrapp_postal_code', country: 'hrapp_address_country', roleDescription: 'hrapp_role_description' }).forEach(([field, column]) => setValue(field, applicant[column] || ''));
+      setValue('skills', res.data.skills || []);
+      setValue('experiences', (res.data.hr_applicant_experience || []).map(item => ({
+        hrapp_exp_id: item.hrapp_exp_id, role: item.hrapp_exp_role, institute: item.hrapp_exp_institute,
+        country: String(item.hrapp_exp_country), from: item.hrapp_exp_from, to: item.hrapp_exp_to || '',
+        current: Number(item.hrapp_exp_current) === 1, subject: item.hrapp_exp_subject || '', grades: item.hrapp_exp_grades || '',
+        position: item.hrapp_exp_position || 'Onsite', jobType: item.hrapp_exp_job_type || 'Full Time', description: item.hrapp_exp_description || '',
+      })));
       setValue('joining_date', applicant.hrapp_joining_date);
       setValue('hrapp_local_experience', applicant.hrapp_local_experience);
       setValue('hrapp_broad_experience', applicant.hrapp_broad_experience);
       setValue('hrapp_statute_teaching_1', String(applicant.hrapp_statute_teaching));
-      setValue('hrapp_statute_work_country_1', String(applicant.hrapp_statute_work_country));
+      setValue('allowedToWorkUae', String(applicant.hrapp_statute_work_country ?? 0));
       setValue('hrapp_statute_supervised_under_eighteen_1', String(applicant.hrapp_statute_supervised_under_eighteen));
 
       if (applicant.hrapp_picture) {
@@ -213,6 +256,9 @@ const EmployeeApplicationForm = () => {
       setValue('degrees', applicant_education.map(item => {
         return {
           date: item.hrapp_ed_date,
+          university: item.hrapp_ed_university || '',
+          from: item.hrapp_ed_from || '',
+          to: item.hrapp_ed_to || item.hrapp_ed_date || '',
           type: item.hrapp_ed_degree,
           hrapp_ed_id: item.hrapp_ed_id,
           attachment: import.meta.env.VITE_BUCKET_URL + import.meta.env.VITE_CENTER_UUID + '/hr_applicant_education/' + item.hrapp_ed_attachment

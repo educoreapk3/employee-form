@@ -10,6 +10,25 @@ html {
   font-family: "Roboto", sans-serif;
 }
 
+.application-card input:not([type="file"]):not([type="radio"]),
+.application-card select {
+  min-width: 0;
+}
+
+.application-card textarea {
+  min-height: 149px;
+  resize: vertical;
+}
+
+.application-card label[for]:has(input[type="file"]) {
+  min-height: 218px;
+}
+
+.application-card label[for]:has(input[type="file"]) img[alt="upload"] {
+  width: 36px;
+  height: 36px;
+}
+
 /* Hide scrollbar but allow scroll */
 .no-scrollbar {
   scrollbar-width: none;        /* Firefox */

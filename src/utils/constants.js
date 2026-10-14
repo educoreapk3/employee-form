@@ -36,8 +36,11 @@ export const steps = [
     label: "Professional Experience",
     fields: [
       "joining_date",
-      "hrapp_local_experience",
-      "hrapp_broad_experience"
+      "hrapp_statute_teaching_1",
+      "allowedToWorkUae",
+      "hrapp_statute_supervised_under_eighteen_1",
+      "preferredRole",
+      "roleDescription"
     ],
   },
   {

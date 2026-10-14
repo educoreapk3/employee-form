@@ -28,7 +28,7 @@ const PageWrapper = ({ children }) => {
       ">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <img src={LogoImg} alt="Educore Logo" className="h-8 sm:h-10" />
+          <img src={LogoImg} alt="Educore Logo" className="h-7" />
           <p className="text-xl sm:text-3xl font-normal text-black">
             Educore
           </p>

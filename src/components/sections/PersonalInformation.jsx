@@ -59,7 +59,7 @@ const PersonalInformation = ({ form, errors }) => {
         </div>
 
         {/* Right Image Upload */}
-        <div className="w-full lg:w-80">
+        <div className="w-full lg:w-[234px] lg:shrink-0">
           <FileUpload
             label="Passport size photo"
             name="hrapp_picture"
@@ -71,14 +71,14 @@ const PersonalInformation = ({ form, errors }) => {
       </div>
 
       {/* DOB + Gender */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {/* <Input
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
           type="date"
           label="Date of Birth"
           name="dob"
           register={register}
           error={errors.dob}
-        /> */}
+        />
 
         <RadioGroup
           label="Select your Gender"

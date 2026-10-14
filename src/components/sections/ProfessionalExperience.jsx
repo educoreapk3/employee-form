@@ -1,5 +1,6 @@
 import Input from "../form/Input";
 import RadioGroup from "../form/RadioGroup";
+import Textarea from "../form/Textarea";
 
 const RadioBoxOptions = [
   { label: "Yes", value: "1" },
@@ -18,7 +19,7 @@ const ProfessionalExperience = ({ form, errors }) => {
 
 
       {/* Experience */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
 
         {/* Joining Date */}
         <Input
@@ -29,19 +30,6 @@ const ProfessionalExperience = ({ form, errors }) => {
           error={errors.joining_date}
         />
 
-        <Input
-          label="Total Years of Teaching Experience"
-          name="hrapp_local_experience"
-          register={register}
-          error={errors.hrapp_local_experience}
-        />
-
-        <Input
-          label="Years of Experience in UAE"
-          name="hrapp_broad_experience"
-          register={register}
-          error={errors.hrapp_broad_experience}
-        />
       </div>
 
       {/* Yes / No Questions */}
@@ -52,14 +40,16 @@ const ProfessionalExperience = ({ form, errors }) => {
           register={register}
           error={errors.hrapp_statute_teaching_1}
           options={RadioBoxOptions}
+          showIndicator
         />
 
         <RadioGroup
-          label="Any issues related to work in UAE?"
-          name="hrapp_statute_work_country_1"
+          label="Are you allowed to work in UAE?"
+          name="allowedToWorkUae"
           register={register}
-          error={errors.hrapp_statute_work_country_1}
+          error={errors.allowedToWorkUae}
           options={RadioBoxOptions}
+          showIndicator
         />
 
         <RadioGroup
@@ -68,8 +58,23 @@ const ProfessionalExperience = ({ form, errors }) => {
           register={register}
           error={errors.hrapp_statute_supervised_under_eighteen_1}
           options={RadioBoxOptions}
+          showIndicator
         />
       </div>
+      <Input
+        label="Preferred Role"
+        name="preferredRole"
+        placeholder="Enter the details of the preferred role"
+        register={register}
+        error={errors.preferredRole}
+      />
+      <Textarea
+        label="Role description"
+        name="roleDescription"
+        placeholder="Why do you prefer this role? and how does it relate to your experience?"
+        register={register}
+        error={errors.roleDescription}
+      />
     </div>
   );
 };

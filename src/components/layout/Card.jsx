@@ -1,6 +1,6 @@
 const Card = ({ children }) => {
   return (
-    <div className="bg-white rounded-tr-2xl rounded-tl-2xl shadow p-8 overflow-y-auto flex-1 no-scrollbar">
+    <div className="application-card bg-white rounded-tr-2xl rounded-tl-2xl p-4 sm:p-6 overflow-y-auto flex-1 min-h-0 no-scrollbar">
       {children}
     </div>
   );
